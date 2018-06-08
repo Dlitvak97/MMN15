@@ -6,8 +6,9 @@ import java.util.*;
  */
 public class BigNumber
 {
+    //TODO delete
     private List digits;
-
+    private IntNode _lastDigit;
     //TODO fill all doc and change the Linked list to what the course wants
 
     /**
@@ -15,7 +16,11 @@ public class BigNumber
      */
     public BigNumber()
     {
+        //TODO delete
         digits = new LinkedList();
+        // set the value of the digit to 0
+        _lastDigit = new IntNode(0, null);
+        //TODO delete
         ((LinkedList) digits).addFirst(0);
     }
 
@@ -26,15 +31,24 @@ public class BigNumber
      */
     public BigNumber(long number)
     {
+        //TODO delete
         digits = new LinkedList();
-
-        do
+        _lastDigit = new IntNode((int) number % 10, null);
+        // drop the last digit from the number after it was added to the list
+        number /= 10;
+        IntNode currentDigit = _lastDigit;
+        while (number > 0)
         {
-            // Add the last digit to the end
+            // Add the latest digit after the current digit for the order of the list to be from units to tens to
+            // hundreds and so on
+            //TODO delete
             ((LinkedList) digits).addLast((int) number % 10);
-            // Cut one digit from the number
+            currentDigit.setNext(new IntNode((int) number % 10, null));
+            // Change the current digit to add the next digit after the digit before that
+            currentDigit = currentDigit.getNext();
+            // Drop the last digit from the number after it was added to the list
             number /= 10;
-        } while (number > 0);
+        }
     }
 
     /**
@@ -47,12 +61,29 @@ public class BigNumber
         // Check if the object exists
         if (number != null)
         {
+            // Create a node to travel the other BigNumber
+            IntNode otherCurrentDigit = number._lastDigit;
+            //TODO delete
             ListIterator iterator = number.digits.listIterator();
-            do
+            //TODO delete
+            digits = new LinkedList();
+            // add the last digit to this BigNumber
+            _lastDigit = new IntNode(otherCurrentDigit.getValue(), null);
+            // Create a node to travel this list
+            IntNode thisCurrentDigit = _lastDigit;
+            // Advance the current digit to add the next digit
+            otherCurrentDigit = otherCurrentDigit.getNext();
+            while (otherCurrentDigit != null)
             {
                 // Take the first digit and put it to the end
+                //TODO delete
                 ((LinkedList) digits).addLast(iterator.next());
-            } while (iterator.hasNext());
+                // set the next digit of this BigNumber to to be the next digit of the other BigNUmber
+                thisCurrentDigit.setNext(new IntNode(otherCurrentDigit.getValue(), null));
+                // Change the current digit of this BigNumber to add the next digit of the other BigNumber
+                // after the digit before that
+                thisCurrentDigit = thisCurrentDigit.getNext();
+            }
         }
     }
 
@@ -64,18 +95,19 @@ public class BigNumber
     public String toString()
     {
         // Call for the recursive function
-        return toString(digits.listIterator());
+        return toString(_lastDigit);
     }
 
     // The recursive function that prints the number the way regular number are printed from left to right
-    private String toString(ListIterator iterator)
+    private String toString(IntNode node)
     {
         // If the node has a value
-        if (iterator.hasNext())
+        if (node != null)
         {
-            int value = (int) iterator.next();
-            // call the recursive function with the current result at the end of the string
-            return toString(iterator) + value;
+            // keep the nodes value
+            int value = node.getValue();
+            // call the recursive function with the current nodes value at the end of the string
+            return toString(node.getNext()) + value;
         }
         // if no value than return an empty string
         else
@@ -245,7 +277,7 @@ public class BigNumber
      * @param other the number to multiply by
      * @return the result of the multiplication of this by the other
      */
-    public BigNumber multiBigNumber(BigNumber other)
+    public BigNumber multBigNumber(BigNumber other)
     {
         int numberOfZeroes;
         BigNumber result = new BigNumber();
