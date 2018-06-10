@@ -12,6 +12,9 @@ public class BigNumber
 
     /**
      * Constructs a new BigNumber object. Initializes the big number with the value 0.
+     *
+     * time complexity: O(1)
+     * space complexity: O(1)
      */
     public BigNumber()
     {
@@ -21,6 +24,9 @@ public class BigNumber
 
     /**
      * Constructor that receives a number of the type long and converts it to a BigNumber type.
+     *
+     * time complexity: O(n)
+     * space complexity: O(n)
      *
      * @param number the number to convert
      */
@@ -48,6 +54,9 @@ public class BigNumber
 
     /**
      * A copy constructor for BigNumber
+     *
+     * time complexity: O(n)
+     * space complexity: O(n)
      *
      * @param other the BigNumber to copy
      */
@@ -85,6 +94,9 @@ public class BigNumber
     /**
      * Returns a string representation of the BigNumber object
      *
+     * time complexity: O(n)
+     * space complexity: O(n)
+     *
      * @return a string representation of the BigNumber object
      */
     public String toString()
@@ -111,6 +123,9 @@ public class BigNumber
 
     /**
      * Gets a BigNumber and returns a BigNumber that is the sum of this BigNumber and the other
+     *
+     * time complexity: O(n)
+     * space complexity: O(n)
      *
      * @param other the number to add to this number
      * @return a BigNumber that is the sum of this and the other number
@@ -216,6 +231,9 @@ public class BigNumber
     /**
      * Gets a number of type long and return a BigNumber that is the sum of this and the other number
      *
+     * time complexity: O(n)
+     * space complexity: O(n)
+     *
      * @param num the number to add to this number
      * @return A BigNumber that is the sum of this and the other number
      */
@@ -320,6 +338,9 @@ public class BigNumber
     /**
      * Gets another BigNumber and returns a comparison result
      *
+     * time complexity: O(n)
+     * space complexity: O(1)
+     *
      * @param other the number to compare to
      * @return 1 if other is smaller; -1 if other is bigger; 0 if they are equal
      */
@@ -356,6 +377,9 @@ public class BigNumber
 
     /**
      * Gets a BigNumber and returns a BigNumber that is the subtraction of the bigger by the smaller one
+     *
+     * time complexity: O(n)
+     * space complexity: O(n)
      *
      * @param other the number to subtract with
      * @return the subtraction of the bigger number by the smaller number
@@ -520,6 +544,9 @@ public class BigNumber
 
     /**
      * Gets a BigNumber and returns a BigNumber that is the multiplication of this BigNumber and the other
+     *
+     * time complexity:O(n^3)
+     * space complexity: O(n)
      *
      * @param other the number to multiply by
      * @return the result of the multiplication of this by the other
