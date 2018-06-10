@@ -1,17 +1,17 @@
-import java.util.*;
-
 /**
+ * This class represents a large number object.
+ *
  * Author: Daniel Litvak
- * Date: 28.3.2018
+ * Date: 10.6.2018
  */
+
 public class BigNumber
 {
-    // The head of the list of all the digits of the number ordered from least s
+    // The head of the digit list. Starts from the units and continues to tens, hundreds and so on.
     private IntNode _lastDigit;
-    //TODO fill all doc and change the Linked list to what the course wants
 
     /**
-     * Constructs a new BigNumber object. Initializes the big number with the value 0
+     * Constructs a new BigNumber object. Initializes the big number with the value 0.
      */
     public BigNumber()
     {
@@ -20,22 +20,26 @@ public class BigNumber
     }
 
     /**
-     * Constructor that receives a number of the type long and converts it to a big number type
+     * Constructor that receives a number of the type long and converts it to a BigNumber type.
      *
      * @param number the number to convert
      */
     public BigNumber(long number)
     {
+        // Put the unit in the digit list
         _lastDigit = new IntNode((int) number % 10, null);
-        // drop the last digit from the number after it was added to the list
+
+        // Drop the last digit from the number after it was added to the list
         number /= 10;
+
         IntNode currentDigit = _lastDigit;
         while (number > 0)
         {
-            // Add the latest digit after the current digit for the order of the list to be from units to tens to
+            // Add the latest digit after the current digit so the order of the list will be from units to tens to
             // hundreds and so on
             currentDigit.setNext(new IntNode((int) number % 10, null));
-            // Change the current digit to add the next digit after the digit before that
+
+            // Advance with the digit node
             currentDigit = currentDigit.getNext();
             // Drop the last digit from the number after it was added to the list
             number /= 10;
@@ -61,7 +65,7 @@ public class BigNumber
             // Create a node to travel this BigNumber
             IntNode thisCurrentDigit = _lastDigit;
 
-            // Advance the other digit to add the next digit to the new number
+            // Advance the other digit
             otherCurrentDigit = otherCurrentDigit.getNext();
 
             while (otherCurrentDigit != null)
@@ -69,8 +73,7 @@ public class BigNumber
                 // set the next digit of this BigNumber to to be the next digit of the other BigNUmber
                 thisCurrentDigit.setNext(new IntNode(otherCurrentDigit.getValue(), null));
 
-                // Change the current digit of this BigNumber to add the next digit of the other BigNumber
-                // after the digit before that
+                // Advance the current digit node
                 thisCurrentDigit = thisCurrentDigit.getNext();
 
                 // Advance the other digit to add the next digit to the new number
@@ -86,7 +89,7 @@ public class BigNumber
      */
     public String toString()
     {
-        // Call for the recursive function
+        // Call for the recursive function with the digits list
         return toString(_lastDigit);
     }
 
@@ -110,7 +113,7 @@ public class BigNumber
      * Gets a BigNumber and returns a BigNumber that is the sum of this BigNumber and the other
      *
      * @param other the number to add to this number
-     * @return the sum of this and the other number
+     * @return a BigNumber that is the sum of this and the other number
      */
     public BigNumber addBigNumber(BigNumber other)
     {
@@ -145,7 +148,7 @@ public class BigNumber
         thisCurrent = thisCurrent.getNext();
         otherCurrent = otherCurrent.getNext();
 
-        // Keep adding as long both numbers got their digits
+        // Keep adding as long as both numbers have their digits
         while (thisCurrent != null && otherCurrent != null)
         {
             // Add both digits
@@ -155,7 +158,7 @@ public class BigNumber
             digit = sum % 10;
 
             // Put the digit
-            resultCurrent.setNext(new IntNode(digit,null));
+            resultCurrent.setNext(new IntNode(digit, null));
 
             // Set the carry if there should be a carry
             carry = sum / 10;
@@ -163,10 +166,10 @@ public class BigNumber
             // Advance with the digits
             thisCurrent = thisCurrent.getNext();
             otherCurrent = otherCurrent.getNext();
-            resultCurrent =  resultCurrent.getNext();
+            resultCurrent = resultCurrent.getNext();
         }
 
-        // In case this number was not fully added continue
+        // In case this number was not fully added continue adding it to the result
         while (thisCurrent != null)
         {
             // Calculate the value, and the digit
@@ -174,7 +177,7 @@ public class BigNumber
             digit = sum % 10;
 
             // Put the digit in the result
-            resultCurrent.setNext(new IntNode(digit,null));
+            resultCurrent.setNext(new IntNode(digit, null));
 
             // Calculate the carry
             carry = sum / 10;
@@ -184,7 +187,7 @@ public class BigNumber
             resultCurrent = resultCurrent.getNext();
         }
 
-        // In case other number was not fully added continue
+        // In case other number was not fully added continue adding it to the result
         while (otherCurrent != null)
         {
             // Calculate the value, and the digit
@@ -192,7 +195,7 @@ public class BigNumber
             digit = sum % 10;
 
             // Put the digit in the result
-            resultCurrent.setNext(new IntNode(digit,null));
+            resultCurrent.setNext(new IntNode(digit, null));
 
             // Calculate the carry
             carry = sum / 10;
@@ -205,7 +208,7 @@ public class BigNumber
         if (carry > 0)
         {
             // Put the carry in the result
-            resultCurrent.setNext(new IntNode(carry,null));
+            resultCurrent.setNext(new IntNode(carry, null));
         }
         return result;
     }
@@ -214,7 +217,7 @@ public class BigNumber
      * Gets a number of type long and return a BigNumber that is the sum of this and the other number
      *
      * @param num the number to add to this number
-     * @return A BigNumber that is the sum of this and the numbers
+     * @return A BigNumber that is the sum of this and the other number
      */
     public BigNumber addLong(long num)
     {
@@ -226,6 +229,7 @@ public class BigNumber
 
         // The digit to put in the result BigNumber
         int digit;
+
         BigNumber result = new BigNumber();
 
         // The nodes to travel the digit lists
@@ -233,7 +237,7 @@ public class BigNumber
         IntNode resultCurrent = result._lastDigit;
 
         // Add both digits
-        sum = thisCurrent.getValue() + (int)(num % 10);
+        sum = thisCurrent.getValue() + (int) (num % 10);
 
         // The digit to put is the modulus 10 of the sum
         digit = sum % 10;
@@ -252,13 +256,13 @@ public class BigNumber
         while (thisCurrent != null && num != 0)
         {
             // Add both digits
-            sum = thisCurrent.getValue() + (int)(num % 10) + carry;
+            sum = thisCurrent.getValue() + (int) (num % 10) + carry;
 
             // The digit to put is the modulus 10 of the sum
             digit = sum % 10;
 
             // Put the digit
-            resultCurrent.setNext(new IntNode(digit,null));
+            resultCurrent.setNext(new IntNode(digit, null));
 
             // Set the carry if there should be a carry
             carry = sum / 10;
@@ -266,7 +270,7 @@ public class BigNumber
             // Advance with the digits
             thisCurrent = thisCurrent.getNext();
             num /= 10;
-            resultCurrent =  resultCurrent.getNext();
+            resultCurrent = resultCurrent.getNext();
         }
 
         // In case this number was not fully added continue
@@ -277,7 +281,7 @@ public class BigNumber
             digit = sum % 10;
 
             // Put the digit in the result
-            resultCurrent.setNext(new IntNode(digit,null));
+            resultCurrent.setNext(new IntNode(digit, null));
 
             // Calculate the carry
             carry = sum / 10;
@@ -291,11 +295,11 @@ public class BigNumber
         while (num != 0)
         {
             // Calculate the value, and the digit
-            sum = (int)(num % 10) + carry;
+            sum = (int) (num % 10) + carry;
             digit = sum % 10;
 
             // Put the digit in the result
-            resultCurrent.setNext(new IntNode(digit,null));
+            resultCurrent.setNext(new IntNode(digit, null));
 
             // Calculate the carry
             carry = sum / 10;
@@ -308,7 +312,7 @@ public class BigNumber
         if (carry > 0)
         {
             // Put the carry in the result
-            resultCurrent.setNext(new IntNode(carry,null));
+            resultCurrent.setNext(new IntNode(carry, null));
         }
         return result;
     }
@@ -317,7 +321,7 @@ public class BigNumber
      * Gets another BigNumber and returns a comparison result
      *
      * @param other the number to compare to
-     * @return 1 if this is bigger; -1 if other is bigger; 0 if they are equal
+     * @return 1 if other is smaller; -1 if other is bigger; 0 if they are equal
      */
     public int compareTo(BigNumber other)
     {
@@ -325,20 +329,23 @@ public class BigNumber
         IntNode thisCurrent = _lastDigit;
         IntNode otherCurrent = other._lastDigit;
         int check;
+
         while (thisCurrent != null && otherCurrent != null)
         {
             // Positive means this is bigger, negative means other is bigger, zero means no change
             check = thisCurrent.getValue() - otherCurrent.getValue();
+
             // Change the check appropriately if the numbers are different
             if (check > 0)
                 result = 1;
             else if (check < 0)
                 result = -1;
 
-            // Advance the traveling nodes
+            // Advance the traveling digit nodes
             thisCurrent = thisCurrent.getNext();
             otherCurrent = otherCurrent.getNext();
         }
+
         // If one of the numbers is longer it means it is bigger
         if (thisCurrent != null)
             result = 1;
@@ -359,7 +366,7 @@ public class BigNumber
         BigNumber small;
         int compareResult = compareTo(other);
 
-        // Check which number is bigger for future calculations
+        // Check which number is bigger in order to subtract the smaller from the bigger
         if (compareResult > 0)
         {
             // Other is smaller than this
@@ -391,7 +398,7 @@ public class BigNumber
         // Calculate the difference between the big number and the small number
         difference = bigCurrent.getValue() - smallCurrent.getValue();
 
-        // if the difference is negative
+        // If the difference is negative borrow from the next digit of the big number
         if (difference < 0)
         {
             digit = 10 + difference;
@@ -411,10 +418,10 @@ public class BigNumber
 
         while (smallCurrent != null && bigCurrent != null)
         {
-            // The digit to set is the subtract result minus the borrow
+            // The digit to set is the subtraction result minus the borrow from the subtraction before
             difference = bigCurrent.getValue() - borrow - smallCurrent.getValue();
 
-            // If the value is negative borrow from the next digit of the big number
+            // If the difference is negative borrow from the next digit of the big number
             if (difference < 0)
             {
                 digit = 10 + difference;
@@ -423,9 +430,12 @@ public class BigNumber
             else
             {
                 digit = difference;
+
+                // If not borrowed from the next digit, reset the borrow variable
                 borrow = 0;
             }
-            // Check if the digit is zero
+
+            // Check if the digit is zero to avoid removing zeroes at the end in case there is no more digits
             if (digit == 0)
             {
                 // If the digit is 0 count it instead of putting it in the BigNumber
@@ -433,7 +443,8 @@ public class BigNumber
             }
             else
             {
-                // Check if there are zeros to put before the digit
+                // Check if there are zeros to put before the digit, if the zero counter is larger than 0 it means
+                // some zeros were counted and not added to the BigNumber so they need to be added before the new digit
                 if (zeroCounter > 0)
                 {
                     // put the required amount of zeroes before the digit
@@ -445,6 +456,8 @@ public class BigNumber
                     }
                 }
                 resultCurrent.setNext(new IntNode(digit, null));
+
+                // Advance the result digit node
                 resultCurrent = resultCurrent.getNext();
             }
 
@@ -469,8 +482,11 @@ public class BigNumber
             else
             {
                 digit = difference;
+
+                // If not borrowed from the next digit, reset the borrow variable
                 borrow = 0;
             }
+
             // Check if the digit is zero
             if (digit == 0)
             {
@@ -491,6 +507,8 @@ public class BigNumber
                     }
                 }
                 resultCurrent.setNext(new IntNode(digit, null));
+
+                // Advance the result digit node
                 resultCurrent = resultCurrent.getNext();
             }
 
@@ -515,17 +533,17 @@ public class BigNumber
         // Traveling digit nodes
         IntNode thisCurrent = _lastDigit;
         IntNode otherCurrent = other._lastDigit;
-        IntNode resultCurrent = result._lastDigit;
         IntNode tempCurrent;
 
         int product;
         int thisDigitCounter = 0;
         int otherDigitCounter = 0;
-        // Pass over the digits of the this number
+        // Pass over the digits of the this number; Multiply each digit with every other digit
         while (thisCurrent != null)
         {
             int thisDigit = thisCurrent.getValue();
-            // Pass over the digits of the other number
+
+            // Pass over the digits of the other number; Multiply this digit with all the digits in other
             while (otherCurrent != null)
             {
                 // Calculate how many zeroes should be added
@@ -535,7 +553,7 @@ public class BigNumber
                 otherDigitCounter++;
                 int otherDigit = otherCurrent.getValue();
 
-                // Calculate the product of the two digits
+                // Calculate the product of the two digits; maximum 9 * 9 = 81
                 product = thisDigit * otherDigit;
 
                 // Add the product to temp
@@ -561,7 +579,7 @@ public class BigNumber
                 // Add temp to the final result
                 result = result.addBigNumber(tempBigNumber);
 
-                // Reset the temporary
+                // Reset temp
                 tempBigNumber = new BigNumber();
 
                 // Advance the digit node of other BigNumber
@@ -569,6 +587,7 @@ public class BigNumber
             }
             // Reset the other number of digits counter
             otherDigitCounter = 0;
+
             // Reset the digit node of other BigNumber
             otherCurrent = other._lastDigit;
             thisDigitCounter++;

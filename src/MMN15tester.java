@@ -1,4 +1,3 @@
-import java.math.*;
 public class MMN15tester
 {
     public static void main(String args[])
@@ -31,6 +30,12 @@ public class MMN15tester
         System.out.println(c.compareTo(c)+ " should be 0");
         for (long i = 0;i<=1500;i++)
         {
+            String s1 = (new BigNumber(i)).toString();
+            String s2 = new BigNumber(new BigNumber(i)).toString();
+            if(!String.valueOf(i).equals(s1))
+                System.out.println("0) Wrong with i");
+            if(!String.valueOf(i).equals(s2))
+                System.out.println("02) Wrong with i");
             for (long j = 0;j<=1500;j++)
             {
                 sum1=(new BigNumber(i).addBigNumber(new BigNumber(j))).toString();
