@@ -543,9 +543,10 @@ public class BigNumber
     }
 
     /**
-     * Gets a BigNumber and returns a BigNumber that is the multiplication of this BigNumber and the other
+     * Gets a BigNumber and returns a BigNumber that is the product of the multiplication of this BigNumber and
+     * other BigNumber
      *
-     * time complexity:O(n^3)
+     * time complexity:O(n^2)
      * space complexity: O(n)
      *
      * @param other the number to multiply by
@@ -553,74 +554,86 @@ public class BigNumber
      */
     public BigNumber multBigNumber(BigNumber other)
     {
-        int numberOfZeroes;
         BigNumber result = new BigNumber();
-        BigNumber tempBigNumber = new BigNumber();
 
-        // Traveling digit nodes
-        IntNode thisCurrent = _lastDigit;
-        IntNode otherCurrent = other._lastDigit;
-        IntNode tempCurrent;
+        //Check if any of the factors are 0; if so return 0
+        if (this.compareTo(result) == 0 || other.compareTo(result) == 0)
+            return result;
 
-        int product;
-        int thisDigitCounter = 0;
-        int otherDigitCounter = 0;
-        // Pass over the digits of the this number; Multiply each digit with every other digit
-        while (thisCurrent != null)
+        IntNode resultDigitNode = result._lastDigit;
+        IntNode resultDigitNodeMarker = result._lastDigit;
+        IntNode thisDigitNode = this._lastDigit;
+        IntNode otherDigitNode = other._lastDigit;
+
+        // Sum the product of every digit with every other digit
+        while (thisDigitNode != null)
         {
-            int thisDigit = thisCurrent.getValue();
+            int thisDigit = thisDigitNode.getValue();
+            int digit;
+            int carry = 0;
 
-            // Pass over the digits of the other number; Multiply this digit with all the digits in other
-            while (otherCurrent != null)
+            // Set the result digit node to the marker
+            resultDigitNode = resultDigitNodeMarker;
+            // Go over all of the other big number digits
+            while(otherDigitNode != null)
             {
-                // Calculate how many zeroes should be added
-                numberOfZeroes = thisDigitCounter + otherDigitCounter;
+                int otherDigit = otherDigitNode.getValue();
 
-                // Increase the number of digits passed of the other number
-                otherDigitCounter++;
-                int otherDigit = otherCurrent.getValue();
+                // Calculate the product of the digits
+                int product = otherDigit * thisDigit + carry + resultDigitNode.getValue();
 
-                // Calculate the product of the two digits; maximum 9 * 9 = 81
-                product = thisDigit * otherDigit;
+                // Calculate the right digit to put in the result
+                digit = product % 10;
 
-                // Add the product to temp
-                tempBigNumber = tempBigNumber.addLong(product);
+                // Calculate the carry to add in the next iteration
+                carry = product / 10;
 
-                // If zeroes need to be added to temp
-                if (numberOfZeroes > 0 && product != 0)
+                // put the right digit in the result digit node
+                resultDigitNode.setValue(digit);
+
+                // If this is the last digit of both numbers and there is no carry  don't create a new node
+                // nor advance to a new node
+                if (thisDigitNode.getNext() == null && otherDigitNode.getNext() == null && carry == 0)
+                    break;
+
+                // Advance with the digit node
+                otherDigitNode = otherDigitNode.getNext();
+
+                // Check if the result big number has a next node; if not create it.
+                if (resultDigitNode.getNext() == null)
                 {
-                    tempCurrent = tempBigNumber._lastDigit;
-
-                    // Add the missing zeroes in the beginning of the list
-                    for (int i = 0; i < numberOfZeroes; i++)
-                    {
-                        // Create a node with zero and connect it to the head of the list to add a zero
-                        // in the beginning of the digit list
-                        tempCurrent = new IntNode(0, tempCurrent);
-                    }
-
-                    // Change the digit list to start from the last zero added
-                    tempBigNumber._lastDigit = tempCurrent;
+                    resultDigitNode.setNext(new IntNode(0,null));
                 }
-
-                // Add temp to the final result
-                result = result.addBigNumber(tempBigNumber);
-
-                // Reset temp
-                tempBigNumber = new BigNumber();
-
-                // Advance the digit node of other BigNumber
-                otherCurrent = otherCurrent.getNext();
+                resultDigitNode = resultDigitNode.getNext();
             }
-            // Reset the other number of digits counter
-            otherDigitCounter = 0;
 
-            // Reset the digit node of other BigNumber
-            otherCurrent = other._lastDigit;
-            thisDigitCounter++;
+            // If there is a carry left after the pass on other's digits, put the carry in the result
+            while (carry != 0)
+            {
+                digit = carry % 10;
+                carry /= 10;
+                resultDigitNode.setValue(digit);
 
-            // advance the digit node of this BigNumber
-            thisCurrent = thisCurrent.getNext();
+                // If there is no carry skip creating it and advancing
+                /*if (carry == 0)
+                    break;
+
+                // Check if the result big number has a next node; if not create it
+                if (resultDigitNode.getNext() == null)
+                {
+                    resultDigitNode.setNext(new IntNode(0,null));
+                }
+                resultDigitNode = resultDigitNode.getNext();*/
+            }
+
+            // Advance with the this digit node
+            thisDigitNode = thisDigitNode.getNext();
+
+            // Reset the other digit node
+            otherDigitNode = other._lastDigit;
+
+            // Advance with the result digit node marker
+            resultDigitNodeMarker = resultDigitNodeMarker.getNext();
         }
         return result;
     }
