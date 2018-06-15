@@ -33,7 +33,7 @@ public class BigNumber
     public BigNumber(long number)
     {
         // Put the unit in the digit list
-        _lastDigit = new IntNode((int) number % 10, null);
+        _lastDigit = new IntNode((int) (number % 10), null);
 
         // Drop the last digit from the number after it was added to the list
         number /= 10;
@@ -43,7 +43,7 @@ public class BigNumber
         {
             // Add the latest digit after the current digit so the order of the list will be from units to tens to
             // hundreds and so on
-            currentDigit.setNext(new IntNode((int) number % 10, null));
+            currentDigit.setNext(new IntNode((int) (number % 10), null));
 
             // Advance with the digit node
             currentDigit = currentDigit.getNext();
